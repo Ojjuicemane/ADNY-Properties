@@ -1,1 +1,1 @@
-# ADNY-Properties
+Deployment: upload all files to GitHub Pages, Azure Static Web Apps, Netlify, or Vercel. Open index.html locally for testing.
