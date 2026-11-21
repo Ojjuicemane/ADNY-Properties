@@ -1,486 +1,323 @@
-////////////////////////////////////////////////////////////
-// MAP INITIALIZATION
-////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+// MAP
+/////////////////////////////////////////////////////////
 
 const map = L.map("map").setView(
   [40.75, -73.98],
   11
 );
 
-////////////////////////////////////////////////////////////
-// BASEMAPS
-////////////////////////////////////////////////////////////
-
 const imagery =
   L.esri.basemapLayer("Imagery");
-
-const streets =
-  L.esri.basemapLayer("Streets");
-
-const topo =
-  L.esri.basemapLayer("Topographic");
 
 imagery.addTo(map);
 
 L.esri
-  .basemapLayer("ImageryLabels")
-  .addTo(map);
+ .basemapLayer("ImageryLabels")
+ .addTo(map);
 
-////////////////////////////////////////////////////////////
-// NYC MAPPLUTO
-////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+// NYC PARCELS
+/////////////////////////////////////////////////////////
 
 const nycParcels =
-  L.esri.featureLayer({
+L.esri.featureLayer({
 
     url:
-      "https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/MAPPLUTO/FeatureServer/0",
+    "https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/MAPPLUTO/FeatureServer/0",
 
-    style: {
-      color: "#0080ff",
-      weight: 1
+    style:{
+        color:"#3b82f6",
+        weight:1,
+        opacity:.75
     }
-
-  });
-
-nycParcels.on("click", function (e) {
-
-  document.getElementById(
-    "details"
-  ).innerHTML =
-    `<pre>${JSON.stringify(
-      e.layer.feature.properties,
-      null,
-      2
-    )}</pre>`;
 
 });
-
-////////////////////////////////////////////////////////////
-// ROCKLAND
-////////////////////////////////////////////////////////////
-
-const rocklandParcels =
-  L.esri.featureLayer({
-
-    url:
-      "https://services7.arcgis.com/NbZxijYF6JgLi4dp/ArcGIS/rest/services/Orangetown_Parcels_WFL1/FeatureServer/1",
-
-    style: {
-      color: "#ff4d4d",
-      weight: 1
-    }
-
-  });
-
-////////////////////////////////////////////////////////////
-// ORANGE
-////////////////////////////////////////////////////////////
-
-const orangeParcels =
-  L.esri.dynamicMapLayer({
-
-    url:
-      "https://gis.orangecountygov.com/arcgis/rest/services/Dynamic/ParcelViewer/MapServer",
-
-    layers: [7]
-
-  });
-
-////////////////////////////////////////////////////////////
-// PUTNAM
-////////////////////////////////////////////////////////////
-
-const putnamParcels =
-  L.esri.featureLayer({
-
-    url:
-      "https://services2.arcgis.com/dU6jdOIkCUj2UDe9/arcgis/rest/services/Putnam_parcels_2024/FeatureServer/0",
-
-    style: {
-      color: "#00cc66",
-      weight: 1
-    }
-
-  });
-
-////////////////////////////////////////////////////////////
-// ULSTER
-////////////////////////////////////////////////////////////
-
-const ulsterParcels =
-  L.esri.featureLayer({
-
-    url:
-      "https://gis.ulstercountyny.gov/server/rest/services/Parcel_Viewer/Tax_Parcel_Data/MapServer/0",
-
-    style: {
-      color: "#ff9900",
-      weight: 1
-    }
-
-  });
-
-////////////////////////////////////////////////////////////
-// SULLIVAN
-////////////////////////////////////////////////////////////
-
-const sullivanParcels =
-  L.esri.featureLayer({
-
-    url:
-      "https://gis.sullivanny.us/arcgis/rest/services/Parcels/FeatureServer/1",
-
-    style: {
-      color: "#9900ff",
-      weight: 1
-    }
-
-  });
-
-////////////////////////////////////////////////////////////
-// DEFAULT LAYER
-////////////////////////////////////////////////////////////
 
 nycParcels.addTo(map);
 
 ////////////////////////////////////////////////////////////
-// LAYER CONTROL
+// COUNTY SERVICE REGISTRY
 ////////////////////////////////////////////////////////////
 
-const baseMaps = {
+const COUNTY_SERVICES = {
 
-  "Imagery": imagery,
-  "Streets": streets,
-  "Topographic": topo
+  NYC: {
+    name: "NYC MapPLUTO",
+    verified: true,
+    type: "feature",
+    url:
+      "https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/MAPPLUTO/FeatureServer/0"
+  },
+
+  Rockland: {
+    name: "Rockland County",
+    verified: false,
+    type: "feature",
+    url: null
+  },
+
+  Orange: {
+    name: "Orange County",
+    verified: false,
+    type: "dynamic",
+    url: null
+  },
+
+  Dutchess: {
+    name: "Dutchess County",
+    verified: false,
+    type: "feature",
+    url: null
+  },
+
+  Putnam: {
+    name: "Putnam County",
+    verified: false,
+    type: "feature",
+    url: null
+  },
+
+  Ulster: {
+    name: "Ulster County",
+    verified: false,
+    type: "feature",
+    url: null
+  },
+
+  Sullivan: {
+    name: "Sullivan County",
+    verified: false,
+    type: "feature",
+    url: null
+  }
 
 };
 
-const overlays = {
+/////////////////////////////////////////////////////////
+// PARCEL CLICK
+/////////////////////////////////////////////////////////
 
-  "NYC MapPLUTO":
-    nycParcels,
+nycParcels.on("click", function(e){
 
-  "Rockland County":
-    rocklandParcels,
+ const p =
+ e.layer.feature.properties;
 
-  "Orange County":
-    orangeParcels,
+ document.getElementById(
+  "parcelContent"
+ ).innerHTML = `
 
-  "Putnam County":
-    putnamParcels,
+ <div class="property-stat">
+   <div class="property-label">
+     Address
+   </div>
+   <div class="property-value">
+     ${p.Address || ''}
+   </div>
+ </div>
 
-  "Ulster County":
-    ulsterParcels,
+ <div class="property-stat">
+   <div class="property-label">
+      Owner
+   </div>
+   <div class="property-value">
+      ${p.OwnerName || 'Unknown'}
+   </div>
+ </div>
 
-  "Sullivan County":
-    sullivanParcels
+ <div class="property-stat">
+   <div class="property-label">
+      BBL
+   </div>
+   <div class="property-value">
+      ${p.BBL || ''}
+   </div>
+ </div>
 
-};
+ <hr>
 
-L.control.layers(
-  baseMaps,
-  overlays,
-  {
-    collapsed: false
-  }
-).addTo(map);
+ <h3>Data Provenance</h3>
 
-////////////////////////////////////////////////////////////
-// LAYER MONITORING
-////////////////////////////////////////////////////////////
+ <div class="property-stat">
+    <div class="property-label">
+      Source Agency
+    </div>
+    <div class="property-value">
+      NYC Department of City Planning
+    </div>
+ </div>
 
-function monitorLayer(
-  name,
-  layer
-) {
+ <div class="property-stat">
+    <div class="property-label">
+      Dataset
+    </div>
+    <div class="property-value">
+      MapPLUTO
+    </div>
+ </div>
 
-  layer.on(
-    "load",
-    function () {
+ <div class="property-stat">
+    <div class="property-label">
+      Verification
+    </div>
+    <div class="property-value">
+      Verified Public Record
+    </div>
+ </div>
 
-      console.log(
-        "SUCCESS:",
-        name,
-        "loaded"
-      );
+ `;
+});
 
-    }
-  );
-
-  layer.on(
-    "requesterror",
-    function (e) {
-
-      console.error(
-        "ERROR:",
-        name,
-        e
-      );
-
-    }
-  );
-
-}
-
-monitorLayer(
-  "NYC",
-  nycParcels
-);
-
-monitorLayer(
-  "Rockland",
-  rocklandParcels
-);
-
-monitorLayer(
-  "Putnam",
-  putnamParcels
-);
-
-monitorLayer(
-  "Ulster",
-  ulsterParcels
-);
-
-monitorLayer(
-  "Sullivan",
-  sullivanParcels
-);
-
-////////////////////////////////////////////////////////////
-// SERVICE HEALTH CHECKS
-////////////////////////////////////////////////////////////
-
-async function testService(
-  name,
-  url
-) {
-
-  try {
-
-    const response =
-      await fetch(
-        url + "?f=pjson"
-      );
-
-    if (
-      !response.ok
-    ) {
-
-      console.error(
-        "FAILED:",
-        name,
-        response.status
-      );
-
-      return;
-    }
-
-    const json =
-      await response.json();
-
-    console.log(
-      "ONLINE:",
-      name,
-      json.name ||
-      json.serviceDescription ||
-      "ArcGIS Service"
-    );
-
-  }
-
-  catch (err) {
-
-    console.error(
-      "ERROR:",
-      name,
-      err
-    );
-
-  }
-
-}
-
-testService(
-  "NYC",
-  nycParcels.options.url
-);
-
-testService(
-  "Rockland",
-  rocklandParcels.options.url
-);
-
-testService(
-  "Putnam",
-  putnamParcels.options.url
-);
-
-testService(
-  "Ulster",
-  ulsterParcels.options.url
-);
-
-testService(
-  "Sullivan",
-  sullivanParcels.options.url
-);
-
-////////////////////////////////////////////////////////////
-// ADDRESS SEARCH
-////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+// SEARCH
+/////////////////////////////////////////////////////////
 
 let searchMarker = null;
 
-async function searchAddress() {
+async function searchAddress(){
 
-  const q =
-    document
-      .getElementById(
-        "addressInput"
-      )
-      .value
-      .trim();
+ const q =
+ document.getElementById(
+   "addressInput"
+ ).value;
 
-  if (!q) {
-    return;
-  }
+ if(!q) return;
 
-  document
-    .getElementById(
-      "status"
-    )
-    .textContent =
-    "Searching...";
+ document.getElementById(
+   "statusBar"
+ ).innerHTML =
+ "Searching...";
 
-  const url =
-    `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=pjson&maxLocations=1&singleLine=${encodeURIComponent(q)}`;
+ const url =
+ `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=pjson&singleLine=${encodeURIComponent(q)}&maxLocations=1`;
 
-  try {
+ try{
 
-    const r =
-      await fetch(
-        url
-      );
+   const r =
+   await fetch(url);
 
-    const d =
-      await r.json();
+   const d =
+   await r.json();
 
-    if (
-      !d.candidates ||
-      d.candidates.length === 0
-    ) {
+   if(
+     d.candidates &&
+     d.candidates.length
+   ){
 
-      document
-        .getElementById(
-          "status"
-        )
-        .textContent =
-        "No match found";
-
-      return;
-
-    }
-
-    const c =
+      const c =
       d.candidates[0];
 
-    if (
-      searchMarker
-    ) {
+      if(searchMarker){
 
-      map.removeLayer(
-        searchMarker
-      );
+        map.removeLayer(
+          searchMarker
+        );
 
-    }
+      }
 
-    searchMarker =
+      searchMarker =
       L.marker([
         c.location.y,
         c.location.x
       ]).addTo(map);
 
-    searchMarker
-      .bindPopup(
-        c.address
-      )
-      .openPopup();
+      map.setView(
+        [
+         c.location.y,
+         c.location.x
+        ],
+        18
+      );
 
-    map.setView(
-      [
-        c.location.y,
-        c.location.x
-      ],
-      17
-    );
-
-    document
-      .getElementById(
-        "status"
-      )
-      .textContent =
+      document.getElementById(
+       "statusBar"
+      ).innerHTML =
       c.address;
+   }
 
-  }
+ }catch(err){
 
-  catch (err) {
+   console.error(err);
 
-    console.error(
-      err
-    );
-
-    document
-      .getElementById(
-        "status"
-      )
-      .textContent =
-      "Search error";
-
-  }
+   document.getElementById(
+    "statusBar"
+   ).innerHTML =
+   "Search failed";
+ }
 
 }
 
-////////////////////////////////////////////////////////////
-// SEARCH EVENTS
-////////////////////////////////////////////////////////////
-
 document
-  .getElementById(
-    "searchBtn"
-  )
+.getElementById(
+ "searchBtn"
+)
+.addEventListener(
+ "click",
+ searchAddress
+);
+
+/////////////////////////////////////////////////////////
+// LAYER TOGGLES
+/////////////////////////////////////////////////////////
+
+function bindToggle(
+  id,
+  layer
+){
+
+ document
+  .getElementById(id)
   .addEventListener(
-    "click",
-    searchAddress
-  );
+   "change",
+   function(){
 
-document
-  .getElementById(
-    "addressInput"
-  )
-  .addEventListener(
-    "keydown",
-    function (e) {
+    if(this.checked){
 
-      if (
-        e.key ===
-        "Enter"
-      ) {
+      map.addLayer(
+       layer
+      );
 
-        searchAddress();
+    }else{
 
-      }
+      map.removeLayer(
+       layer
+      );
 
     }
+
+   }
   );
+}
 
-////////////////////////////////////////////////////////////
-// STARTUP
-////////////////////////////////////////////////////////////
+bindToggle(
+ "nycToggle",
+ nycParcels
+);
 
-document
-  .getElementById(
+bindToggle(
+ "rocklandToggle",
+ rocklandParcels
+);
+
+bindToggle(
+ "orangeToggle",
+ orangeParcels
+);
+
+bindToggle(
+ "putnamToggle",
+ putnamParcels
+);
+
+bindToggle(
+ "ulsterToggle",
+ ulsterParcels
+);
+
+bindToggle(
+ "sullivanToggle",
+ sullivanParcels
+);
     "status"
   )
   .textContent =
