@@ -40,57 +40,90 @@ nycParcels.addTo(map);
 // COUNTY LAYERS
 /////////////////////////////////////////////////////////
 
-const NewYorkParcles =
-L.esri.featureLayer({
 
- url:
- "https://zola.planning.nyc.gov/about#9.72/40.6756/-73.8197"
+const COUNTY_SERVICES = {
+
+  Rockland: {
+    name: "Rockland County",
+    verified: false,
+    type: "feature",
+    url: null
+  },
+
+  Orange: {
+    name: "Orange County",
+    verified: false,
+    type: "dynamic",
+    url: null
+  },
+
+  Dutchess: {
+    name: "Dutchess County",
+    verified: false,
+    type: "feature",
+    url: null
+  },
+
+  Putnam: {
+    name: "Putnam County",
+    verified: false,
+    type: "feature",
+    url: null
+  },
+
+  Ulster: {
+    name: "Ulster County",
+    verified: false,
+    type: "feature",
+    url: null
+  },
+
+  Sullivan: {
+    name: "Sullivan County",
+    verified: false,
+    type: "feature",
+    url: null
+  }
+
+};
+function createLayer(config) {
+
+  if (!config.url) {
+
+    console.warn(
+      config.name +
+      " endpoint not configured"
+    );
+
+    return L.layerGroup();
+
+  }
+
+  if (config.type === "dynamic") {
+
+    return L.esri.dynamicMapLayer({
+      url: config.url
+    });
+
+  }
+
+  return L.esri.featureLayer({
+    url: config.url
+  });
+
+}
+
+const countyLayers = {};
+
+Object.keys(COUNTY_SERVICES)
+.forEach(function(key){
+
+  countyLayers[key] =
+    createLayer(
+      COUNTY_SERVICES[key]
+    );
 
 });
-
-
-const rocklandParcels =
-L.esri.featureLayer({
-
- url:
- "https://services7.arcgis.com/NbZxijYF6JgLi4dp/ArcGIS/rest/services/Orangetown_Parcels_WFL1/FeatureServer/1"
-
-});
-
-const orangeParcels =
-L.esri.dynamicMapLayer({
-
- url:
- "https://gis.orangecountygov.com/arcgis/rest/services/Dynamic/ParcelViewer/MapServer",
-
- layers:[7]
-
-});
-
-const putnamParcels =
-L.esri.featureLayer({
-
- url:
- "https://services2.arcgis.com/dU6jdOIkCUj2UDe9/arcgis/rest/services/Putnam_parcels_2024/FeatureServer/0"
-
-});
-
-const ulsterParcels =
-L.esri.featureLayer({
-
- url:
- "https://gis.ulstercountyny.gov/server/rest/services/Parcel_Viewer/Tax_Parcel_Data/MapServer/0"
-
-});
-
-const sullivanParcels =
-L.esri.featureLayer({
-
- url:
- "https://gis.sullivanny.us/arcgis/rest/services/Parcels/FeatureServer/1"
-
-});
-
 /////////////////////////////////////////////////////////
 // PARCEL CLICK
 /////////////////////////////////////////////////////////
