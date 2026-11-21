@@ -36,63 +36,60 @@ L.esri.featureLayer({
 
 nycParcels.addTo(map);
 
-////////////////////////////////////////////////////////////
-// COUNTY SERVICE REGISTRY
-////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+// COUNTY LAYERS
+/////////////////////////////////////////////////////////
 
-const COUNTY_SERVICES = {
+const NewYorkParcles =
+L.esri.featureLayer({
 
-  NYC: {
-    name: "NYC MapPLUTO",
-    verified: true,
-    type: "feature",
-    url:
-      "https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/MAPPLUTO/FeatureServer/0"
-  },
+ url:
+ "https://zola.planning.nyc.gov/about#9.72/40.6756/-73.8197"
 
-  Rockland: {
-    name: "Rockland County",
-    verified: false,
-    type: "feature",
-    url: null
-  },
+});
 
-  Orange: {
-    name: "Orange County",
-    verified: false,
-    type: "dynamic",
-    url: null
-  },
 
-  Dutchess: {
-    name: "Dutchess County",
-    verified: false,
-    type: "feature",
-    url: null
-  },
+const rocklandParcels =
+L.esri.featureLayer({
 
-  Putnam: {
-    name: "Putnam County",
-    verified: false,
-    type: "feature",
-    url: null
-  },
+ url:
+ "https://services7.arcgis.com/NbZxijYF6JgLi4dp/ArcGIS/rest/services/Orangetown_Parcels_WFL1/FeatureServer/1"
 
-  Ulster: {
-    name: "Ulster County",
-    verified: false,
-    type: "feature",
-    url: null
-  },
+});
 
-  Sullivan: {
-    name: "Sullivan County",
-    verified: false,
-    type: "feature",
-    url: null
-  }
+const orangeParcels =
+L.esri.dynamicMapLayer({
 
-};
+ url:
+ "https://gis.orangecountygov.com/arcgis/rest/services/Dynamic/ParcelViewer/MapServer",
+
+ layers:[7]
+
+});
+
+const putnamParcels =
+L.esri.featureLayer({
+
+ url:
+ "https://services2.arcgis.com/dU6jdOIkCUj2UDe9/arcgis/rest/services/Putnam_parcels_2024/FeatureServer/0"
+
+});
+
+const ulsterParcels =
+L.esri.featureLayer({
+
+ url:
+ "https://gis.ulstercountyny.gov/server/rest/services/Parcel_Viewer/Tax_Parcel_Data/MapServer/0"
+
+});
+
+const sullivanParcels =
+L.esri.featureLayer({
+
+ url:
+ "https://gis.sullivanny.us/arcgis/rest/services/Parcels/FeatureServer/1"
+
+});
 
 /////////////////////////////////////////////////////////
 // PARCEL CLICK
@@ -318,7 +315,3 @@ bindToggle(
  "sullivanToggle",
  sullivanParcels
 );
-    "status"
-  )
-  .textContent =
-  "Ready - Search by address";
