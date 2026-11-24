@@ -260,9 +260,8 @@ async function searchAddress(){
  ).innerHTML =
  "Searching...";
 
- const url =
+const url =
 `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=pjson&singleLine=${encodeURIComponent(q)}&maxLocations=1`;
- try{
 
    const r =
    await fetch(url);
@@ -368,6 +367,11 @@ bindToggle(
 bindToggle(
  "rocklandToggle",
  countyLayers.Rockland
+);
+
+bindToggle(
+  "dutchessToggle",
+  countyLayers.Dutchess
 );
 
 bindToggle(
