@@ -24,18 +24,15 @@ const nycParcels =
 L.esri.featureLayer({
 
   url:
-"https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/MAPPLUTO/FeatureServer/0"
+  "https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/MAPPLUTO/FeatureServer/0",
 
-    style:{
-        color:"#3b82f6",
-        weight:1,
-        opacity:.75
-    }
+  style:{
+    color:"#3b82f6",
+    weight:1,
+    opacity:.75
+  }
 
 });
-
-nycParcels.addTo(map);
-
 /////////////////////////////////////////////////////////
 // COUNTY LAYERS
 /////////////////////////////////////////////////////////
