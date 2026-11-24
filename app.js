@@ -37,7 +37,6 @@ L.esri.featureLayer({
 // COUNTY LAYERS
 /////////////////////////////////////////////////////////
 
-
 const COUNTY_SERVICES = {
 
   Rockland: {
@@ -122,17 +121,6 @@ Object.keys(COUNTY_SERVICES)
 
 });
 
-const countyLayers = {};
-
-Object.keys(COUNTY_SERVICES)
-.forEach(function(key){
-
-  countyLayers[key] =
-    createLayer(
-      COUNTY_SERVICES[key]
-    );
-
-});
 
 /////////////////////////////////////////////////////////
 // OVERLAYS
