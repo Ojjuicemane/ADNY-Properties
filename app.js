@@ -23,8 +23,8 @@ L.esri
 const nycParcels =
 L.esri.featureLayer({
 
-    url:
-    "https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/MAPPLUTO/FeatureServer/0",
+  url:
+"https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/MAPPLUTO/FeatureServer/0"
 
     style:{
         color:"#3b82f6",
