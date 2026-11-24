@@ -276,8 +276,7 @@ async function searchAddress(){
  "Searching...";
 
  const url =
- `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=pjson&singleLine=${encodeURIComponent(q)}&maxLocations=1`;
-
+`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=pjson&singleLine=${encodeURIComponent(q)}&maxLocations=1`;
  try{
 
    const r =
@@ -383,25 +382,25 @@ bindToggle(
 
 bindToggle(
  "rocklandToggle",
- rocklandParcels
+ countyLayers.Rockland
 );
 
 bindToggle(
  "orangeToggle",
- orangeParcels
+ countyLayers.Orange
 );
 
 bindToggle(
  "putnamToggle",
- putnamParcels
+ countyLayers.Putnam
 );
 
 bindToggle(
  "ulsterToggle",
- ulsterParcels
+ countyLayers.Ulster
 );
 
 bindToggle(
  "sullivanToggle",
- sullivanParcels
+ countyLayers.Sullivan
 );
